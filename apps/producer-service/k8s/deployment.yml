@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-service
+  labels:
+    app: producer-api
+spec:
+  selector:
+    matchLabels:
+      app: producer-api
+  template:
+    metadata:
+      name: producer-service
+      labels:
+        app: producer-api
+    spec:
+      containers:
+      - name: producer-api
+        imagePullPolicy: Never
+        image: docker.io/library/producer-service
+        ports:
+          - containerPort: 8080
+            name: apipod
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+        env:
+        - name: KAFKA_SERVER
+          value: demo-kafka-cp-kafka:9092
+        - name: TOPIC
+          value: randomtopic
+        - name: POD_NAME
+          valueFrom: 
+            fieldRef:
+              fieldPath: metadata.name

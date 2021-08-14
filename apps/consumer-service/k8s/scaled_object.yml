@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: consumer-service
+spec:
+  scaleTargetRef:
+    name: consumer-service
+  pollingInterval: 5 # default: 30
+  cooldownPeriod: 10
+  minReplicaCount: 0 # default: 0
+  maxReplicaCount: 10 # default: 100
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: demo-kafka-cp-kafka.demo.svc.cluster.local:9092
+      consumerGroup: consumerService
+      topic: randomtopic
+      lagThreshold: '5'
+      offsetResetPolicy: latest
+      allowIdleConsumers: "false"

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-service
+  labels:
+    app: consumer-api
+spec:
+  selector:
+    matchLabels:
+      app: consumer-api
+  template:
+    metadata:
+      name: consumer-service
+      labels:
+        app: consumer-api
+    spec:
+      containers:
+      - name: consumer-api
+        imagePullPolicy: Never
+        image: docker.io/library/consumer-service
+        ports:
+          - containerPort: 8080
+            name: apipod
+        env:
+        - name: POD_NAME
+          valueFrom: 
+            fieldRef:
+              fieldPath: metadata.name
+        resources:
+          requests:
+            memory: "400Mi"
+            cpu: "1000m"
+          limits:
+            memory: "600Mi"
+            cpu: "1500m"

@@ -1,0 +1,12 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: keda-sandbox
+nodes:
+  - role: control-plane
+    extraPortMappings:
+    - containerPort: 30000
+      hostPort: 30000
+      listenAddress: "0.0.0.0"
+      protocol: tcp
+  - role: worker # two worker nodes
+  - role: worker
